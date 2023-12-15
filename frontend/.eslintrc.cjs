@@ -4,7 +4,16 @@ module.exports = {
         'plugin:import/warnings',
         'prettier',
     ],
-    plugins: ['typescript-sort-keys', 'sort-keys-fix'],
+    parser: '@typescript-eslint/parser',
+    plugins: ['typescript-sort-keys', 'sort-keys-fix', 'react'],
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                paths: ['src'],
+            },
+        },
+    },
     rules: {
         'import/order': [
             'warn',

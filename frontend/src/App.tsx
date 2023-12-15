@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Input } from './Components/Input'
+
+import { Input } from './components/Input'
 import './index.css'
 
 type StockResponse = {
     data: {
-        stock_code: string
         market_cap: number
+        stock_code: string
     }[]
     total_market_cap: number
 }
@@ -16,11 +17,11 @@ const App = () => {
 
     const onSubmit = async () => {
         const response = await fetch('http://localhost:8000/api', {
-            method: 'POST',
+            body: JSON.stringify({ stock_codes: stockCodes }),
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ stock_codes: stockCodes }),
+            method: 'POST',
         })
 
         const data: StockResponse = await response.json()
