@@ -1,18 +1,58 @@
 module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+    extends: [
+        'plugin:import/recommended',
+        'plugin:import/warnings',
+        'prettier',
     ],
-  },
+    plugins: ['typescript-sort-keys', 'sort-keys-fix'],
+    rules: {
+        'import/order': [
+            'warn',
+            {
+                groups: [
+                    'builtin', // 組み込みモジュール
+                    'external', // npmでインストールした外部ライブラリ
+                    'internal', // 自作モジュール
+                    ['parent', 'sibling'],
+                    'object',
+                    'type',
+                    'index',
+                ],
+                'newlines-between': 'always', // グループ毎にで改行を入れる
+                pathGroupsExcludedImportTypes: ['builtin'],
+                alphabetize: {
+                    order: 'asc', // 昇順にソート
+                    caseInsensitive: true, // 小文字大文字を区別する
+                },
+                pathGroups: [
+                    // 指定した順番にソートされる
+                    {
+                        pattern: '@/components/common',
+                        group: 'internal',
+                        position: 'before',
+                    },
+                    {
+                        pattern: '@/components/hooks',
+                        group: 'internal',
+                        position: 'before',
+                    },
+                ],
+            },
+        ],
+        'react/jsx-sort-props': [
+            'warn',
+            {
+                callbacksLast: true,
+                shorthandFirst: true,
+                shorthandLast: false,
+                ignoreCase: true,
+                noSortAlphabetically: false,
+                reservedFirst: true,
+            },
+        ],
+        'react-hooks/rules-of-hooks': 'off',
+        'prefer-template': 'warn',
+        'sort-keys-fix/sort-keys-fix': 'warn',
+        'typescript-sort-keys/interface': 'warn',
+    },
 }
