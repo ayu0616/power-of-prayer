@@ -17,8 +17,8 @@ class yf:
     @staticmethod
     def get_market_cap(stock_code: str | list[str]):
         if isinstance(stock_code, list):
-            res = [yfinance.Ticker(code).info["marketCap"] for code in stock_code]
-            return res
+            res_li: list[int] = [yfinance.Ticker(code).info["marketCap"] for code in stock_code]
+            return res_li
         else:
-            res = yfinance.Ticker(stock_code).info["marketCap"]
+            res: int = yfinance.Ticker(stock_code).info["marketCap"]
             return res
