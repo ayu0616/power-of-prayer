@@ -14,7 +14,7 @@ services:
         depends_on:
             - backend
         networks:
-            - frontend-network
+            - frontend
 
     backend:
         build:
@@ -25,11 +25,11 @@ services:
         volumes:
             - ./backend:/app
         networks:
-            - frontend-network
-            - backend-network
+            - frontend
+            - backend
 
 networks:
-    frontend-network:
+    frontend:
         driver: bridge
-    backend-network:
+    backend:
         driver: bridge
