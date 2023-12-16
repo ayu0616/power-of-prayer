@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { StockResponse, getMarketCap } from './api'
+import { Button } from './components'
 import { Input } from './components/Input'
 import './index.css'
 import { numberWithComma } from './util'
@@ -32,20 +33,17 @@ const App = () => {
                             />
                         ))}
                     </div>
-                    <button
-                        className='rounded bg-green-600 px-3 py-2 text-white'
+                    <Button
+                        variant='success'
                         onClick={() => {
                             setStockCodes([...stockCodes, ''])
                         }}
                     >
                         Add stock code
-                    </button>
-                    <button
-                        className='rounded bg-blue-600 px-3 py-2 text-white'
-                        onClick={onSubmit}
-                    >
+                    </Button>
+                    <Button variant='primary' onClick={onSubmit}>
                         submit
-                    </button>
+                    </Button>
                 </div>
                 {stockRes ? (
                     <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
