@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { StockResponse, getMarketCap } from './api'
 import { Input } from './components/Input'
 import './index.css'
+import { numberWithComma } from './util'
 
 const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>(['4307.T', '4722.T'])
@@ -48,12 +49,14 @@ const App = () => {
                 </div>
                 {stockRes ? (
                     <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
-                        お祈り力：{stockRes.total_market_cap}
+                        お祈り力：{numberWithComma(stockRes.total_market_cap)}
                         <div className='flex flex-wrap gap-4'>
                             {stockRes.data.map((stock) => (
                                 <div key={stock.stock_code}>
                                     <div>{stock.stock_code}</div>
-                                    <div>{stock.market_cap}</div>
+                                    <div>
+                                        {numberWithComma(stock.market_cap)}
+                                    </div>
                                 </div>
                             ))}
                         </div>
