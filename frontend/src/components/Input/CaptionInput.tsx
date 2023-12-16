@@ -1,5 +1,7 @@
 import { ChangeEvent, ComponentProps, useState } from 'react'
 
+import { stocks } from '../../constants'
+
 import { Input, InputProps } from '.'
 
 export interface CaptionInputProps extends Omit<InputProps, 'onChange'> {
@@ -8,7 +10,7 @@ export interface CaptionInputProps extends Omit<InputProps, 'onChange'> {
 }
 
 const getCaptions = (value: string) => {
-    return ['hoge', 'fuga', 'hoge', 'hoge', 'hoge']
+    return Object.values(stocks)
 }
 
 export const CaptionInput = ({
@@ -43,7 +45,11 @@ export const CaptionInput = ({
                 onChange={handleChange}
                 onFocus={handleFocus}
             ></Input>
-            <CaptionContainer className={showCaption ? '' : 'hidden'}>
+            <CaptionContainer
+                className={['max-h-[50vh]', showCaption ? '' : 'hidden'].join(
+                    ' ',
+                )}
+            >
                 {captions.map((caption, index) => (
                     <CaptionItem key={index} onClick={handleCaptionClick}>
                         {caption}
@@ -61,7 +67,10 @@ const CaptionContainer = ({
     return (
         <div
             {...props}
-            className={['absolute z-10 w-full divide-y', className].join(' ')}
+            className={[
+                'absolute z-10 w-full divide-y overflow-y-auto',
+                className,
+            ].join(' ')}
         ></div>
     )
 }
