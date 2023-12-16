@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
 import { StockResponse, getMarketCap } from './api'
-import { Button } from './components'
-import { Input } from './components/Input'
+import { Button, CaptionInput } from './components'
 import './index.css'
 import { numberWithComma } from './util'
 
@@ -21,13 +20,13 @@ const App = () => {
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-4'>
                         {stockCodes.map((stockCode, index) => (
-                            <Input
+                            <CaptionInput
                                 key={index}
                                 placeholder='Enter stock code'
                                 value={stockCode}
-                                onChange={(e) => {
+                                onChange={(value) => {
                                     const newStockCodes = [...stockCodes]
-                                    newStockCodes[index] = e.target.value
+                                    newStockCodes[index] = value
                                     setStockCodes(newStockCodes)
                                 }}
                             />
