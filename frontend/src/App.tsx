@@ -2,20 +2,29 @@ import { useState } from 'react'
 
 import { StockResponse, getMarketCap } from './api'
 import { Button, CaptionInput } from './components'
+import { stockData } from './constants'
 import './index.css'
 import { numberWithComma } from './util'
 
 const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>([''])
+    const [validList, setValidList] = useState<boolean[]>([true])
     const [stockRes, setStockRes] = useState<StockResponse>()
 
     const onSubmit = async () => {
+        const newValidList = [...validList]
+        stockCodes.forEach((stockCode, index) => {
+            newValidList[index] =
+                !Object.keys(stockData).includes(stockCode) && stockCode !== ''
+        })
+        setValidList(newValidList)
+        if (newValidList.some((valid) => !valid)) return
         const data = await getMarketCap(stockCodes)
         setStockRes(data)
     }
 
     return (
-        <div className='h-[100svh] bg-slate-50 p-8 overflow-y-scroll'>
+        <div className='h-[100svh] overflow-y-scroll bg-slate-50 p-8'>
             <div className='flex flex-col gap-6'>
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-4'>
@@ -24,7 +33,9 @@ const App = () => {
                                 <div className='flex-1'>
                                     <CaptionInput
                                         key={index}
+                                        isValid={validList[index]}
                                         placeholder='〇〇株式会社'
+                                        validationMessage='正しい会社名を入力してください'
                                         value={stockCode}
                                         onChange={(value) => {
                                             const newStockCodes = [
@@ -32,6 +43,13 @@ const App = () => {
                                             ]
                                             newStockCodes[index] = value
                                             setStockCodes(newStockCodes)
+
+                                            const newValidList = [...validList]
+                                            newValidList[index] =
+                                                !Object.keys(
+                                                    stockData,
+                                                ).includes(value)
+                                            setValidList(newValidList)
                                         }}
                                     />
                                 </div>
@@ -41,6 +59,10 @@ const App = () => {
                                         const newStockCodes = [...stockCodes]
                                         newStockCodes.splice(index, 1)
                                         setStockCodes(newStockCodes)
+
+                                        const newValidList = [...validList]
+                                        newValidList.splice(index, 1)
+                                        setValidList(newValidList)
                                     }}
                                 >
                                     <svg
@@ -60,6 +82,7 @@ const App = () => {
                         variant='success'
                         onClick={() => {
                             setStockCodes([...stockCodes, ''])
+                            setValidList([...validList, true])
                         }}
                     >
                         お祈り追加
