@@ -1,30 +1,15 @@
 import { useState } from 'react'
 
+import { StockResponse, getMarketCap } from './api'
 import { Input } from './components/Input'
 import './index.css'
-
-type StockResponse = {
-    data: {
-        market_cap: number
-        stock_code: string
-    }[]
-    total_market_cap: number
-}
 
 const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>(['4307.T', '4722.T'])
     const [stockRes, setStockRes] = useState<StockResponse>()
 
     const onSubmit = async () => {
-        const response = await fetch('http://localhost:8000/api', {
-            body: JSON.stringify({ stock_codes: stockCodes }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
-        })
-
-        const data: StockResponse = await response.json()
+        const data = await getMarketCap(stockCodes)
         setStockRes(data)
     }
 
