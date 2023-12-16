@@ -15,7 +15,7 @@ const App = () => {
     }
 
     return (
-        <div className='bg-slate-50 p-8'>
+        <div className='bg-slate-50 p-8 h-[100svh]'>
             <div className='flex flex-col gap-6'>
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-4'>
