@@ -6,18 +6,15 @@ module.exports = {
     ],
     parser: '@typescript-eslint/parser',
     plugins: ['typescript-sort-keys', 'sort-keys-fix', 'react'],
-    settings: {
-        'import/resolver': {
-            node: {
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
-                paths: ['src'],
-            },
-        },
-    },
     rules: {
         'import/order': [
             'warn',
             {
+                alphabetize: {
+                    // 昇順にソート
+                    caseInsensitive: true,
+                    order: 'asc', // 小文字大文字を区別する
+                },
                 groups: [
                     'builtin', // 組み込みモジュール
                     'external', // npmでインストールした外部ライブラリ
@@ -27,41 +24,48 @@ module.exports = {
                     'type',
                     'index',
                 ],
-                'newlines-between': 'always', // グループ毎にで改行を入れる
-                pathGroupsExcludedImportTypes: ['builtin'],
-                alphabetize: {
-                    order: 'asc', // 昇順にソート
-                    caseInsensitive: true, // 小文字大文字を区別する
-                },
+                'newlines-between': 'always',
+
                 pathGroups: [
                     // 指定した順番にソートされる
                     {
-                        pattern: '@/components/common',
                         group: 'internal',
+                        pattern: '@/components/common',
                         position: 'before',
                     },
                     {
-                        pattern: '@/components/hooks',
                         group: 'internal',
+                        pattern: '@/components/hooks',
                         position: 'before',
                     },
                 ],
+                // グループ毎にで改行を入れる
+                pathGroupsExcludedImportTypes: ['builtin'],
             },
         ],
+        'object-shorthand': ['warn', 'always'],
+        'prefer-template': 'warn',
+        'react-hooks/rules-of-hooks': 'off',
         'react/jsx-sort-props': [
             'warn',
             {
                 callbacksLast: true,
-                shorthandFirst: true,
-                shorthandLast: false,
                 ignoreCase: true,
                 noSortAlphabetically: false,
                 reservedFirst: true,
+                shorthandFirst: true,
+                shorthandLast: false,
             },
         ],
-        'react-hooks/rules-of-hooks': 'off',
-        'prefer-template': 'warn',
         'sort-keys-fix/sort-keys-fix': 'warn',
         'typescript-sort-keys/interface': 'warn',
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                paths: ['src'],
+            },
+        },
     },
 }
