@@ -17,10 +17,14 @@ export interface StockInfo {
     totalMarketCap: number
 }
 
+const isDev = import.meta.env.DEV
+
 export const getMarketCap = async (
     stockCodes: string[],
 ): Promise<StockInfo> => {
-    const url = new URL(location.href).origin.replace(/:\d{4}/, ':8000')
+    const url = isDev
+        ? new URL(location.href).origin.replace(/:\d{4}/, ':8000')
+        : ''
     const response = await fetch(`${url}/api`, {
         body: JSON.stringify({ stock_codes: stockCodes }),
         headers: {
