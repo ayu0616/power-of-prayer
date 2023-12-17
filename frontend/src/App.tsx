@@ -88,10 +88,16 @@ const App = () => {
                                     onClick={() => {
                                         const newStockCodes = [...stockCodes]
                                         newStockCodes.splice(index, 1)
+                                        if (newStockCodes.length === 0) {
+                                            newStockCodes.push('')
+                                        }
                                         setStockCodes(newStockCodes)
 
                                         const newValidList = [...validList]
                                         newValidList.splice(index, 1)
+                                        if (newValidList.length === 0) {
+                                            newValidList.push(true)
+                                        }
                                         setValidList(newValidList)
                                     }}
                                 >
@@ -124,10 +130,14 @@ const App = () => {
                 {stockRes ? (
                     <>
                         <div className='flex flex-col gap-4 rounded-md border border-slate-300 bg-white p-4'>
-                            お祈り力：
-                            {toJpNum(stockRes.totalMarketCap)}
+                            <p>
+                                <span className='mr-2'>お祈り力</span>
+                                <span className='text-xl font-bold'>
+                                    {toJpNum(stockRes.totalMarketCap)}
+                                </span>
+                            </p>
                             <table className='table-auto border-collapse'>
-                                <thead>
+                                <thead className='bg-slate-100'>
                                     <tr>
                                         <th className='border border-slate-300 px-4 py-2'>
                                             会社名
@@ -143,7 +153,7 @@ const App = () => {
                                             <td className='border border-slate-300 px-4 py-2'>
                                                 {stock.stockName}
                                             </td>
-                                            <td className='border border-slate-300 px-4 py-2 text-right'>
+                                            <td className='w-0 whitespace-nowrap border border-slate-300 px-4 py-2 text-right'>
                                                 {toJpNum(stock.marketCap)}
                                             </td>
                                         </tr>
