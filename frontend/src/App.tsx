@@ -1,4 +1,17 @@
 import { useState } from 'react'
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    LabelList,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+    XAxis,
+    YAxis,
+} from 'recharts'
 
 import { StockInfo, getMarketCap } from './api'
 import { Button, CaptionInput } from './components'
@@ -6,7 +19,10 @@ import { stockData } from './constants'
 import './index.css'
 import { numberWithComma } from './util'
 
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+enum ChartType {
+    PIE,
+    BAR,
+}
 
 const genColor = (idx: number, total: number) => {
     const hue = (360 / total) * idx
@@ -17,6 +33,7 @@ const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>([''])
     const [validList, setValidList] = useState<boolean[]>([true])
     const [stockRes, setStockRes] = useState<StockInfo>()
+    const [chartType, setChartType] = useState<ChartType>(ChartType.PIE)
 
     const onSubmit = async () => {
         const newValidList = [...validList]
@@ -98,6 +115,22 @@ const App = () => {
                         お祈り力を測定！！！
                     </Button>
                 </div>
+                <div>
+                    <input
+                        checked={chartType === ChartType.PIE}
+                        id='pie'
+                        type='radio'
+                        onChange={() => setChartType(ChartType.PIE)}
+                    />
+                    <label htmlFor='pie'>円グラフ</label>
+                    <input
+                        checked={chartType === ChartType.BAR}
+                        id='bar'
+                        type='radio'
+                        onChange={() => setChartType(ChartType.BAR)}
+                    />
+                    <label htmlFor='bar'>棒グラフ</label>
+                </div>
                 {stockRes ? (
                     <>
                         <ResponsiveContainer
@@ -105,32 +138,68 @@ const App = () => {
                             maxHeight={window.innerHeight / 2}
                             width='100%'
                         >
-                            <PieChart height={800} width={800}>
-                                <Pie
-                                    cx='50%'
-                                    cy='50%'
-                                    data={stockRes.data}
-                                    dataKey='marketCap'
-                                    fill='hsl(120, 50%, 50%)'
-                                    nameKey='stockName'
-                                >
-                                    {/* <LabelList
-                                        color='black'
-                                        dataKey='stockName'
-                                        position='inside'
-                                    ></LabelList> */}
-                                    {stockRes.data.map((_, index) => (
-                                        <Cell
-                                            key={`cell-${index}`}
-                                            fill={genColor(
-                                                index,
-                                                stockRes.data.length,
-                                            )}
-                                        />
-                                    ))}
-                                </Pie>
-                                <Tooltip></Tooltip>
-                            </PieChart>
+                            {(() => {
+                                if (chartType === ChartType.PIE) {
+                                    return (
+                                        <PieChart height={800} width={800}>
+                                            <Pie
+                                                cx='50%'
+                                                cy='50%'
+                                                data={stockRes.data}
+                                                dataKey='marketCap'
+                                                fill='hsl(120, 50%, 50%)'
+                                                nameKey='stockName'
+                                            >
+                                                <LabelList
+                                                    dataKey='stockName'
+                                                    position='inside'
+                                                ></LabelList>
+                                                {stockRes.data.map(
+                                                    (_, index) => (
+                                                        <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={genColor(
+                                                                index,
+                                                                stockRes.data
+                                                                    .length,
+                                                            )}
+                                                        />
+                                                    ),
+                                                )}
+                                            </Pie>
+                                            <Tooltip></Tooltip>
+                                        </PieChart>
+                                    )
+                                } else if (chartType === ChartType.BAR) {
+                                    return (
+                                        <BarChart data={stockRes.data}>
+                                            <CartesianGrid strokeDasharray='4' />
+                                            <XAxis
+                                                dataKey='stockName'
+                                                tick={{ fontSize: 12 }}
+                                            />
+                                            <YAxis tick={{ fontSize: 8 }} />
+                                            <Bar dataKey='marketCap'>
+                                                {stockRes.data.map(
+                                                    (_, index) => (
+                                                        <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={genColor(
+                                                                index,
+                                                                stockRes.data
+                                                                    .length,
+                                                            )}
+                                                        />
+                                                    ),
+                                                )}
+                                            </Bar>
+                                            <Tooltip></Tooltip>
+                                        </BarChart>
+                                    )
+                                } else {
+                                    return <></>
+                                }
+                            })()}
                         </ResponsiveContainer>
                         <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
                             お祈り力：
