@@ -43,8 +43,12 @@ const App = () => {
         })
         setValidList(newValidList)
         if (newValidList.some((valid) => !valid)) return
-        const data = await getMarketCap(stockCodes)
-        setStockRes(data)
+        const res = await getMarketCap(stockCodes)
+        if (res.ok) {
+            setStockRes(res.data)
+        } else {
+            alert(res.data.error)
+        }
     }
 
     return (
