@@ -1,4 +1,4 @@
-import { stockData } from '../constants'
+import { PROD_API_URL, stockData } from '../constants'
 
 interface StockResponse {
     data: {
@@ -36,7 +36,7 @@ const isDev = import.meta.env.DEV
 export const getMarketCap = async (stockCodes: string[]): Promise<Response> => {
     const url = isDev
         ? new URL(location.href).origin.replace(/:\d{4}/, ':8000')
-        : ''
+        : PROD_API_URL
     const response = await fetch(`${url}/api`, {
         body: JSON.stringify({ stock_codes: stockCodes }),
         headers: {
