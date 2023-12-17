@@ -34,21 +34,40 @@ const App = () => {
     const [validList, setValidList] = useState<boolean[]>([true])
     const [stockRes, setStockRes] = useState<StockInfo>()
     const [chartType, setChartType] = useState<ChartType>(ChartType.BAR)
+    const [submitButtonDisabled, setSubmitButtonDisabled] =
+        useState<boolean>(false)
+
+    const handleInputChange = (value: string, index: number) => {
+        const newStockCodes = [...stockCodes]
+        newStockCodes[index] = value
+        setStockCodes(newStockCodes)
+
+        const newValidList = [...validList]
+        newValidList[index] = !Object.keys(stockData).includes(value)
+        setValidList(newValidList)
+
+        setSubmitButtonDisabled(false)
+    }
 
     const onSubmit = async () => {
+        setSubmitButtonDisabled(true)
         const newValidList = [...validList]
         stockCodes.forEach((stockCode, index) => {
             newValidList[index] =
                 !Object.keys(stockData).includes(stockCode) && stockCode !== ''
         })
         setValidList(newValidList)
-        if (newValidList.some((valid) => !valid)) return
+        if (newValidList.some((valid) => !valid)) {
+            setSubmitButtonDisabled(false)
+            return
+        }
         const res = await getMarketCap(stockCodes)
         if (res.ok) {
             setStockRes(res.data)
         } else {
             alert(res.data.error)
         }
+        setSubmitButtonDisabled(false)
     }
 
     return (
@@ -71,20 +90,9 @@ const App = () => {
                                         placeholder='〇〇株式会社'
                                         validationMessage='正しい会社名を入力してください'
                                         value={stockCode}
-                                        onChange={(value) => {
-                                            const newStockCodes = [
-                                                ...stockCodes,
-                                            ]
-                                            newStockCodes[index] = value
-                                            setStockCodes(newStockCodes)
-
-                                            const newValidList = [...validList]
-                                            newValidList[index] =
-                                                !Object.keys(
-                                                    stockData,
-                                                ).includes(value)
-                                            setValidList(newValidList)
-                                        }}
+                                        onChange={(value) =>
+                                            handleInputChange(value, index)
+                                        }
                                     />
                                 </div>
                                 <button
@@ -127,7 +135,11 @@ const App = () => {
                     >
                         お祈り追加
                     </Button>
-                    <Button variant='primary' onClick={onSubmit}>
+                    <Button
+                        disabled={submitButtonDisabled}
+                        variant='primary'
+                        onClick={onSubmit}
+                    >
                         お祈り力を測定！！！
                     </Button>
                 </div>

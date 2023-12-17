@@ -23,7 +23,7 @@ export const Button = ({
         <button
             {...props}
             className={[
-                'rounded px-3 py-2 focus:ring-2',
+                'rounded px-3 py-2 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50',
                 variantClass,
                 className,
             ].join(' ')}
