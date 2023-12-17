@@ -123,8 +123,36 @@ const App = () => {
                 </div>
                 {stockRes ? (
                     <>
+                        <div className='flex flex-col gap-4 rounded-md border border-slate-300 bg-white p-4'>
+                            お祈り力：
+                            {toJpNum(stockRes.totalMarketCap)}
+                            <table className='table-auto border-collapse'>
+                                <thead>
+                                    <tr>
+                                        <th className='border border-slate-300 px-4 py-2'>
+                                            会社名
+                                        </th>
+                                        <th className='border border-slate-300 px-4 py-2'>
+                                            時価総額
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {stockRes.data.map((stock) => (
+                                        <tr key={stock.stockCode}>
+                                            <td className='border border-slate-300 px-4 py-2'>
+                                                {stock.stockName}
+                                            </td>
+                                            <td className='border border-slate-300 px-4 py-2 text-right'>
+                                                {toJpNum(stock.marketCap)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className='flex gap-4'>
-                            <div className='flex gap-1 items-center'>
+                            <div className='flex items-center gap-1'>
                                 <input
                                     checked={chartType === ChartType.BAR}
                                     id='bar'
@@ -133,7 +161,7 @@ const App = () => {
                                 />
                                 <label htmlFor='bar'>棒グラフ</label>
                             </div>
-                            <div className='flex gap-1 items-center'>
+                            <div className='flex items-center gap-1'>
                                 <input
                                     checked={chartType === ChartType.PIE}
                                     id='pie'
@@ -225,34 +253,6 @@ const App = () => {
                                 }
                             })()}
                         </ResponsiveContainer>
-                        <div className='flex flex-col gap-4 rounded-md border border-slate-300 bg-white p-4'>
-                            お祈り力：
-                            {toJpNum(stockRes.totalMarketCap)}
-                            <table className='table-auto border-collapse'>
-                                <thead>
-                                    <tr>
-                                        <th className='border border-slate-300 px-4 py-2'>
-                                            会社名
-                                        </th>
-                                        <th className='border border-slate-300 px-4 py-2'>
-                                            時価総額
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {stockRes.data.map((stock) => (
-                                        <tr key={stock.stockCode}>
-                                            <td className='border border-slate-300 px-4 py-2'>
-                                                {stock.stockName}
-                                            </td>
-                                            <td className='border border-slate-300 px-4 py-2 text-right'>
-                                                {toJpNum(stock.marketCap)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
                     </>
                 ) : null}
             </div>
