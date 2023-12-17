@@ -124,7 +124,7 @@ const App = () => {
                 {stockRes ? (
                     <>
                         <div className='flex gap-4'>
-                            <div className='flex gap-1'>
+                            <div className='flex gap-1 items-center'>
                                 <input
                                     checked={chartType === ChartType.BAR}
                                     id='bar'
@@ -133,7 +133,7 @@ const App = () => {
                                 />
                                 <label htmlFor='bar'>棒グラフ</label>
                             </div>
-                            <div className='flex gap-1'>
+                            <div className='flex gap-1 items-center'>
                                 <input
                                     checked={chartType === ChartType.PIE}
                                     id='pie'
