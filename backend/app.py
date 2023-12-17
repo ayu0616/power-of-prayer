@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -16,7 +18,10 @@ def api():
         return jsonify({"error": "No stock codes provided"}), 400
     stock_codes: list[str] = data["stock_codes"]
     res = []
-    market_caps = yf.get_market_cap(stock_codes)
+    try:
+        market_caps = yf.get_market_cap(stock_codes)
+    except Exception:
+        return jsonify({"message": "エラーが発生しました。時間を置いて再度お試しください。"}), 500
     for code, cap in zip(stock_codes, market_caps):
         res.append({"stock_code": code, "market_cap": cap})
     total_market_cap = sum(market_caps)
@@ -24,4 +29,7 @@ def api():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8000, host="0.0.0.0")
+    if os.getenv("FLASK_ENV") == "development":
+        app.run(debug=True, port=8000, host="0.0.0.0")
+    else:
+        app.run(port=8000, host="0.0.0.0")
