@@ -1,4 +1,6 @@
-export interface StockResponse {
+import { stockData } from '../constants'
+
+interface StockResponse {
     data: {
         market_cap: number
         stock_code: string
@@ -6,10 +8,20 @@ export interface StockResponse {
     total_market_cap: number
 }
 
+export interface StockInfo {
+    data: {
+        marketCap: number
+        stockCode: string
+        stockName: string
+    }[]
+    totalMarketCap: number
+}
+
 export const getMarketCap = async (
     stockCodes: string[],
-): Promise<StockResponse> => {
-    const response = await fetch('http://localhost:8000/api', {
+): Promise<StockInfo> => {
+    const url = new URL(location.href).origin.replace(/:\d{4}/, ':8000')
+    const response = await fetch(`${url}/api`, {
         body: JSON.stringify({ stock_codes: stockCodes }),
         headers: {
             'Content-Type': 'application/json',
@@ -18,6 +30,16 @@ export const getMarketCap = async (
     })
 
     const data: StockResponse = await response.json()
+    const res: StockInfo = {
+        data: data.data.map((stock) => ({
+            marketCap: stock.market_cap,
+            stockCode: stock.stock_code,
+            stockName:
+                stockData.find((s) => s.stockCode === stock.stock_code)
+                    ?.stockName || '',
+        })),
+        totalMarketCap: data.total_market_cap,
+    }
 
-    return data
+    return res
 }

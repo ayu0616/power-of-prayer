@@ -1,15 +1,26 @@
 import { useState } from 'react'
 
-import { StockResponse, getMarketCap } from './api'
+import { StockInfo, getMarketCap } from './api'
 import { Button, CaptionInput } from './components'
 import { stockData } from './constants'
 import './index.css'
 import { numberWithComma } from './util'
 
+import {
+    Cell,
+    LabelList,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip,
+} from 'recharts'
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'] as const
+
 const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>([''])
     const [validList, setValidList] = useState<boolean[]>([true])
-    const [stockRes, setStockRes] = useState<StockResponse>()
+    const [stockRes, setStockRes] = useState<StockInfo>()
 
     const onSubmit = async () => {
         const newValidList = [...validList]
@@ -92,19 +103,47 @@ const App = () => {
                     </Button>
                 </div>
                 {stockRes ? (
-                    <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
-                        お祈り力：{numberWithComma(stockRes.total_market_cap)}
-                        <div className='flex flex-wrap gap-4'>
-                            {stockRes.data.map((stock) => (
-                                <div key={stock.stock_code}>
-                                    <div>{stock.stock_code}</div>
-                                    <div>
-                                        {numberWithComma(stock.market_cap)}
+                    <>
+                        <ResponsiveContainer height={400} width='100%'>
+                            <PieChart height={800} width={800}>
+                                <Pie
+                                    cx='50%'
+                                    cy='50%'
+                                    data={stockRes.data}
+                                    dataKey='marketCap'
+                                    fill='#8884d8'
+                                    nameKey='stockName'
+                                >
+                                    {/* <LabelList
+                                        color='black'
+                                        dataKey='stockName'
+                                        position='inside'
+                                    ></LabelList> */}
+                                    {stockRes.data.map((_, index) => (
+                                        <Cell
+                                            key={`cell-${index}`}
+                                            fill={COLORS[index % COLORS.length]}
+                                        />
+                                    ))}
+                                </Pie>
+                                <Tooltip></Tooltip>
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
+                            お祈り力：
+                            {numberWithComma(stockRes.totalMarketCap)}
+                            <div className='flex flex-wrap gap-4'>
+                                {stockRes.data.map((stock) => (
+                                    <div key={stock.stockCode}>
+                                        <div>{stock.stockName}</div>
+                                        <div>
+                                            {numberWithComma(stock.marketCap)}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    </>
                 ) : null}
             </div>
         </div>
