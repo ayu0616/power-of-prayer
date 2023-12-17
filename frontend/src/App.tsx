@@ -50,6 +50,12 @@ const App = () => {
     return (
         <div className='h-[100svh] overflow-y-scroll bg-slate-50 p-8'>
             <div className='flex flex-col gap-6'>
+                <div>
+                    <h1 className='text-4xl font-bold'>お祈り力測定</h1>
+                    <p>
+                        お祈りメールをもらった企業を入力して、お祈り力を測定しよう！
+                    </p>
+                </div>
                 <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-4'>
                         {stockCodes.map((stockCode, index) => (
@@ -173,7 +179,9 @@ const App = () => {
                                                 )}
                                             </Pie>
                                             <Tooltip
-                                            formatter={(value) => toJpNum(Number(value))}
+                                                formatter={(value) =>
+                                                    toJpNum(Number(value))
+                                                }
                                             ></Tooltip>
                                         </PieChart>
                                     )
