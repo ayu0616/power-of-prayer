@@ -6,16 +6,12 @@ import { stockData } from './constants'
 import './index.css'
 import { numberWithComma } from './util'
 
-import {
-    Cell,
-    LabelList,
-    Pie,
-    PieChart,
-    ResponsiveContainer,
-    Tooltip,
-} from 'recharts'
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'] as const
+const genColor = (idx: number, total: number) => {
+    const hue = (360 / total) * idx
+    return `hsl(${hue}, 60%, 50%)`
+}
 
 const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>([''])
@@ -104,14 +100,18 @@ const App = () => {
                 </div>
                 {stockRes ? (
                     <>
-                        <ResponsiveContainer height={400} width='100%'>
+                        <ResponsiveContainer
+                            aspect={1}
+                            maxHeight={window.innerHeight / 2}
+                            width='100%'
+                        >
                             <PieChart height={800} width={800}>
                                 <Pie
                                     cx='50%'
                                     cy='50%'
                                     data={stockRes.data}
                                     dataKey='marketCap'
-                                    fill='#8884d8'
+                                    fill='hsl(120, 50%, 50%)'
                                     nameKey='stockName'
                                 >
                                     {/* <LabelList
@@ -122,7 +122,10 @@ const App = () => {
                                     {stockRes.data.map((_, index) => (
                                         <Cell
                                             key={`cell-${index}`}
-                                            fill={COLORS[index % COLORS.length]}
+                                            fill={genColor(
+                                                index,
+                                                stockRes.data.length,
+                                            )}
                                         />
                                     ))}
                                 </Pie>
