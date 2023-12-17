@@ -172,7 +172,9 @@ const App = () => {
                                                     ),
                                                 )}
                                             </Pie>
-                                            <Tooltip></Tooltip>
+                                            <Tooltip
+                                            formatter={(value) => toJpNum(Number(value))}
+                                            ></Tooltip>
                                         </PieChart>
                                     )
                                 } else if (chartType === ChartType.BAR) {
@@ -203,7 +205,11 @@ const App = () => {
                                                     ),
                                                 )}
                                             </Bar>
-                                            <Tooltip></Tooltip>
+                                            <Tooltip
+                                                formatter={(value) =>
+                                                    toJpNum(Number(value))
+                                                }
+                                            ></Tooltip>
                                         </BarChart>
                                     )
                                 } else {
