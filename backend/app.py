@@ -5,8 +5,13 @@ from flask_cors import CORS
 
 from yf import yf
 
+IS_DEV = os.getenv("FLASK_ENV") == "development"
+FRONTEND_URL = "https://ayu0616.github.io/power-of-prayer"
+
 app = Flask(__name__)
-CORS(app)
+
+origins = "*" if IS_DEV else FRONTEND_URL
+CORS(app, resources={r"/api/*": {"origins": origins}})
 
 
 @app.route("/api", methods=["POST"])

@@ -49,7 +49,7 @@ export const CaptionInput = ({
         setShowCaption(true)
     }
     const handleBlur = () => {
-        setTimeout(() => setShowCaption(false), 10)
+        setTimeout(() => setShowCaption(false), 100)
     }
 
     useEffect(() => {
