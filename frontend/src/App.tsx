@@ -17,7 +17,7 @@ import { StockInfo, getMarketCap } from './api'
 import { Button, CaptionInput } from './components'
 import { stockData } from './constants'
 import './index.css'
-import { numberWithComma } from './util'
+import { toJpNum } from './util'
 
 enum ChartType {
     PIE,
@@ -33,7 +33,7 @@ const App = () => {
     const [stockCodes, setStockCodes] = useState<string[]>([''])
     const [validList, setValidList] = useState<boolean[]>([true])
     const [stockRes, setStockRes] = useState<StockInfo>()
-    const [chartType, setChartType] = useState<ChartType>(ChartType.PIE)
+    const [chartType, setChartType] = useState<ChartType>(ChartType.BAR)
 
     const onSubmit = async () => {
         const newValidList = [...validList]
@@ -115,26 +115,31 @@ const App = () => {
                         お祈り力を測定！！！
                     </Button>
                 </div>
-                <div>
-                    <input
-                        checked={chartType === ChartType.PIE}
-                        id='pie'
-                        type='radio'
-                        onChange={() => setChartType(ChartType.PIE)}
-                    />
-                    <label htmlFor='pie'>円グラフ</label>
-                    <input
-                        checked={chartType === ChartType.BAR}
-                        id='bar'
-                        type='radio'
-                        onChange={() => setChartType(ChartType.BAR)}
-                    />
-                    <label htmlFor='bar'>棒グラフ</label>
-                </div>
                 {stockRes ? (
                     <>
+                        <div className='flex gap-4'>
+                            <div className='flex gap-1'>
+                                <input
+                                    checked={chartType === ChartType.BAR}
+                                    id='bar'
+                                    type='radio'
+                                    onChange={() => setChartType(ChartType.BAR)}
+                                />
+                                <label htmlFor='bar'>棒グラフ</label>
+                            </div>
+                            <div className='flex gap-1'>
+                                <input
+                                    checked={chartType === ChartType.PIE}
+                                    id='pie'
+                                    type='radio'
+                                    onChange={() => setChartType(ChartType.PIE)}
+                                />
+                                <label htmlFor='pie'>円グラフ</label>
+                            </div>
+                        </div>
                         <ResponsiveContainer
                             aspect={1}
+                            className='rounded-md border border-slate-300 bg-white p-2'
                             maxHeight={window.innerHeight / 2}
                             width='100%'
                         >
@@ -178,7 +183,12 @@ const App = () => {
                                                 dataKey='stockName'
                                                 tick={{ fontSize: 12 }}
                                             />
-                                            <YAxis tick={{ fontSize: 8 }} />
+                                            <YAxis
+                                                tick={{ fontSize: 12 }}
+                                                tickFormatter={(value) =>
+                                                    toJpNum(value)
+                                                }
+                                            />
                                             <Bar dataKey='marketCap'>
                                                 {stockRes.data.map(
                                                     (_, index) => (
@@ -201,19 +211,33 @@ const App = () => {
                                 }
                             })()}
                         </ResponsiveContainer>
-                        <div className='flex flex-col gap-4 rounded-md bg-white p-4'>
+                        <div className='flex flex-col gap-4 rounded-md border border-slate-300 bg-white p-4'>
                             お祈り力：
-                            {numberWithComma(stockRes.totalMarketCap)}
-                            <div className='flex flex-wrap gap-4'>
-                                {stockRes.data.map((stock) => (
-                                    <div key={stock.stockCode}>
-                                        <div>{stock.stockName}</div>
-                                        <div>
-                                            {numberWithComma(stock.marketCap)}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                            {toJpNum(stockRes.totalMarketCap)}
+                            <table className='table-auto border-collapse'>
+                                <thead>
+                                    <tr>
+                                        <th className='border border-slate-300 px-4 py-2'>
+                                            会社名
+                                        </th>
+                                        <th className='border border-slate-300 px-4 py-2'>
+                                            時価総額
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {stockRes.data.map((stock) => (
+                                        <tr key={stock.stockCode}>
+                                            <td className='border border-slate-300 px-4 py-2'>
+                                                {stock.stockName}
+                                            </td>
+                                            <td className='border border-slate-300 px-4 py-2 text-right'>
+                                                {toJpNum(stock.marketCap)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </>
                 ) : null}
